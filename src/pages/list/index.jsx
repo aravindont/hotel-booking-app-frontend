@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import useFetch from "../../hooks/useFetch";
 import { api } from "../../api";
 import axios from "axios";
-export const List = () => {
+export const HotelListPage = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const fetchData = async () => {
@@ -15,24 +15,14 @@ export const List = () => {
     }
     setLoading(false);
   };
+  console.log(data);
+
   useEffect(() => {
     fetchData();
   }, []);
   return (
     <div>
-      {loading ? (
-        "Loading......"
-      ) : (
-        <>
-          {data &&
-            data.length &&
-            data?.map((hotel, index) => (
-              <div key={index}>
-                <h1>{hotel.name}</h1>
-              </div>
-            ))}
-        </>
-      )}
+      <pre>{JSON.stringify(data)}</pre>
     </div>
   );
 };
