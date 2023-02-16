@@ -8,6 +8,7 @@ import "./list.css";
 import { useLocation } from "react-router-dom";
 import format from "date-fns/format";
 import { DateRange } from "react-date-range";
+import { SearchItemComponent } from "../../components/searchItem";
 export const HotelListPage = () => {
   const location = useLocation();
   const [openDate, setOpenDate] = useState(false);
@@ -105,7 +106,9 @@ export const HotelListPage = () => {
             </div>
             <button onClick={handleClick}>Search</button>
           </div>
-          <div className="listResult"></div>
+          <div className="listResult">
+            <SearchItemComponent />
+          </div>
         </div>
       </div>
     </div>
