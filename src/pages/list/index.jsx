@@ -18,7 +18,14 @@ export const HotelListPage = () => {
   const [min, setMin] = useState(null);
   const [max, setMax] = useState(null);
 
-  const handleClick = () => {};
+  const { data, loading, error, reFetch } = useFetch(
+    `${api}/api/v1/hotels/getAllHotels?city=${destination}&min=${
+      min || 0
+    }&max=${max || 999}`
+  );
+  const handleClick = () => {
+    reFetch();
+  };
   return (
     <div>
       <NavbarComponent />
@@ -107,7 +114,15 @@ export const HotelListPage = () => {
             <button onClick={handleClick}>Search</button>
           </div>
           <div className="listResult">
-            <SearchItemComponent />
+            {loading ? (
+              "loading"
+            ) : (
+              <>
+                {data?.map((item) => (
+                  <SearchItemComponent item={item} key={item._id} />
+                ))}
+              </>
+            )}
           </div>
         </div>
       </div>
