@@ -5,7 +5,7 @@ import {
   faLocationDot,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { FooterComponent } from "../../components/footer";
 import { HeaderComponent } from "../../components/header";
@@ -14,6 +14,7 @@ import { NavbarComponent } from "../../components/navbar";
 import useFetch from "../../hooks/useFetch";
 import "./hotel.css";
 import { api } from "../../api";
+import { SearchContext } from "../../context/SearchContext";
 export const SingleHotelPage = () => {
   const location = useLocation();
   const HotelId = location.pathname.split("/")[2];
@@ -23,27 +24,14 @@ export const SingleHotelPage = () => {
   const { data, loading, error, reFetch } = useFetch(
     `${api}/api/v1/hotels/get/${HotelId}`
   );
-  // const photos = [
-  //   {
-  //     src: "https://images.pexels.com/photos/164595/pexels-photo-164595.jpeg?auto=compress&cs=tinysrgb&w=600",
-  //   },
-  //   {
-  //     src: "https://images.pexels.com/photos/262048/pexels-photo-262048.jpeg?auto=compress&cs=tinysrgb&w=600",
-  //   },
-  //   {
-  //     src: "https://images.pexels.com/photos/1457842/pexels-photo-1457842.jpeg?auto=compress&cs=tinysrgb&w=600",
-  //   },
-  //   {
-  //     src: "https://images.pexels.com/photos/210604/pexels-photo-210604.jpeg?auto=compress&cs=tinysrgb&w=600",
-  //   },
-  //   {
-  //     src: "https://images.pexels.com/photos/279746/pexels-photo-279746.jpeg?auto=compress&cs=tinysrgb&w=600",
-  //   },
-  //   {
-  //     src: "https://images.pexels.com/photos/775219/pexels-photo-775219.jpeg?auto=compress&cs=tinysrgb&w=600",
-  //   },
-  // ];
-
+  const { dates, options } = useContext(SearchContext);
+  const MILLISECONDS_PER_DAY = 1000 * 60 * 60 * 24;
+  function dayDifference(date1, date2) {
+    const timeDiff = Math.abs(date2.getTime() - date1.getTime());
+    const diffDays = Math.ceil(timeDiff / MILLISECONDS_PER_DAY);
+    return diffDays;
+  }
+  const days = dayDifference(dates[0].endDate, dates[0].startDate);
   const handleOpen = (i) => {
     setOpen(true);
     setSlideNumber(i);
@@ -124,14 +112,15 @@ export const SingleHotelPage = () => {
                 <p className="hotelDesc">{data.desc}</p>
               </div>
               <div className="hotelDetailsPrice">
-                <h1>Perfect for a vacation stay!</h1>
+                <h1>Perfect for a {days}-night stay!</h1>
                 <span>
                   Lorem ipsum dolor sit amet consectetur adipisicing elit.
                   Eveniet rem quod adipisci voluptatem nulla quis rerum fuga
                   modi architecto ratione.
                 </span>
                 <h2>
-                  <b>Rs.1000</b> <small>per night</small>
+                  <b>${days * data.cheapestPrice * options.room}</b> ({days}{" "}
+                  nights)
                 </h2>
                 <button>Reserve or Book Now!!</button>
               </div>
